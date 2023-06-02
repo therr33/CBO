@@ -1,0 +1,45 @@
+name: Chromebook OS RDP with ngrok
+
+on:
+
+  push:
+
+    branches:
+
+      - master
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Install Chrome Remote Desktop
+
+        run: sudo apt install chrome-remote-desktop
+
+      - name: Create RDP file
+
+        run: chrome remote desktop --generate-configuration-file > chromebook-rdp.rdp
+
+      - name: Install ngrok
+
+        run: sudo apt install ngrok
+
+      - name: Create ngrok tunnel
+
+        run: ngrok tcp 3389
+
+      - name: Upload RDP file
+
+        uses: actions/upload-artifact@v1
+
+        with:
+
+          name: chromebook-rdp
+
+          path: chromebook-rdp.rdp
